@@ -9,7 +9,6 @@ import CheckinController from './app/controllers/CheckinController';
 import HelpOrderController from './app/controllers/HelpOrderController';
 import AnswerOrderController from './app/controllers/AnswerOrderController';
 import authMiddleware from './app/middlewares/auth';
-// import adminMiddleware from './app/middlewares/adminAuth';
 
 const routes = new Router();
 
@@ -26,6 +25,7 @@ routes.post('/students/:id/help-orders', HelpOrderController.store);
 routes.use(authMiddleware);
 
 // Alunos
+routes.get('/students', StudentController.index);
 routes.post('/students', StudentController.store);
 routes.put('/students', StudentController.update);
 

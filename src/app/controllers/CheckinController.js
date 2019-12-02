@@ -1,6 +1,13 @@
-import { addDays, isWithinInterval, differenceInCalendarDays } from 'date-fns';
+import {
+  addDays,
+  isWithinInterval,
+  differenceInCalendarDays,
+  compareDesc,
+} from 'date-fns';
 import Checkin from '../../schemas/Checkins';
 import Student from '../models/Student';
+
+import Registration from '../models/Registration';
 
 class CheckinController {
   async index(req, res) {
@@ -38,16 +45,22 @@ class CheckinController {
       }
     );
 
+    const registration = await Registration.findOne({
+      where: {
+        student_id: req.params.id,
+      },
+    });
+
+    if (compareDesc(new Date(), registration.end_date) === 1) {
+      return res.status(401).json({ message: 'Your membership has expired' });
+    }
+
     await Checkin.create({ student_id: student.id });
 
     const { createdAt } = await Checkin.findOne({ student_id: id });
-
     const expDays = addDays(createdAt, 7);
-
     const actualDay = new Date();
-
     const remnantDays = differenceInCalendarDays(expDays, actualDay);
-
     const withinDays = isWithinInterval(actualDay, {
       start: createdAt,
       end: expDays,
@@ -58,7 +71,7 @@ class CheckinController {
 
       return res
         .status(401)
-        .json({ message: `Gympass is now free, you can log again.` });
+        .json({ message: 'Gympass is now free, you can log again.' });
     }
 
     if (countCheckins >= 5) {

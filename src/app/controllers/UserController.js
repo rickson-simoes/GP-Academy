@@ -9,16 +9,13 @@ class UserController {
     }
 
     // criacao do usuario
-    const { id, name, email, password_hash, admin_status } = await User.create(
-      req.body
-    );
+    const { id, name, email, password_hash } = await User.create(req.body);
 
     return res.status(200).json({
       id,
       name,
       email,
       password_hash,
-      admin_status,
     });
   }
 }

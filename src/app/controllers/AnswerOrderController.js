@@ -51,7 +51,8 @@ class AnswerOrderController {
 
     return res.status(200).json({
       Ticket_ID: helpOrder.id,
-      Client: student.name,
+      Name: student.name,
+      Question: helpOrder.question,
       Answer: answer,
       Answer_at: helpOrder.answer_at,
       Message: 'Your answer has been submited',
